@@ -42,7 +42,6 @@ public class UserServlet extends BaseServlet {
         //调用业务层注册功能
         UserService service = new UserServiceImp();
         try {
-
             service.userRegist(user);
             request.setAttribute("msg",user.getCode());
             return "/jsp/activity_code.jsp";
@@ -63,7 +62,6 @@ public class UserServlet extends BaseServlet {
 //            String[] strings = map.get(string);
 //            for (String s : strings) {
 //                System.out.println(s);
-//
 //            }
 //            System.out.println();
 //

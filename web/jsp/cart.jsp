@@ -47,6 +47,16 @@
 
 
 	<div class="container">
+		
+		<c:if test="${empty cart.cartItems}">
+			<div class="row">
+				<div class="col-md-12">
+					<h1>uuu</h1>
+				</div>
+			</div>
+			</c:if>
+		<c:if test="${ not empty cart.cartItems}">
+
 			<div class="row">
 
 				<div style="margin:0 auto; margin-top:10px;width:950px;">
@@ -61,27 +71,29 @@
 								<th>小计</th>
 								<th>操作</th>
 							</tr>
+							<c:forEach items="${cart.cartItems}" var="item">
 							<tr class="active">
 								<td width="60" width="40%">
 									<input type="hidden" name="id" value="22">
-									<img src="${pageContext.request.contextPath}/products/2/dadonggua.jpg" width="70" height="60">
+									<img src="${pageContext.request.contextPath}/${item.product.pimage}" width="70" height="60">
 								</td>
 								<td width="30%">
-									<a target="_blank"> 有机蔬菜      大冬瓜...</a>
+									<a target="_blank">${item.product.pname}</a>
 								</td>
 								<td width="20%">
-									￥298.00
+									￥${item.product.shop_price}
 								</td>
 								<td width="10%">
-									<input type="text" name="quantity" value="1" maxlength="4" size="10">
+									<input type="text" name="quantity" value="${item.num}" maxlength="4" size="10">
 								</td>
 								<td width="15%">
-									<span class="subtotal">￥596.00</span>
+									<span class="subtotal">￥${item.subTotal}</span>
 								</td>
 								<td>
-									<a href="javascript:;" class="delete">删除</a>
+									<a href="javascript:;" class="delete" >删除</a>
 								</td>
 							</tr>
+							</c:forEach>
 						</tbody>
 					</table>
 				</div>
@@ -91,17 +103,18 @@
 				<div style="text-align:right;">
 					<em style="color:#ff6600;">
 				登录后确认是否享有优惠&nbsp;&nbsp;
-			</em> 赠送积分: <em style="color:#ff6600;">596</em>&nbsp; 商品金额: <strong style="color:#ff6600;">￥596.00元</strong>
+			</em> 赠送积分: <em style="color:#ff6600;">${cart.total}</em>&nbsp; 商品金额: <strong style="color:#ff6600;">￥${cart.total}元</strong>
 				</div>
 				<div style="text-align:right;margin-top:10px;margin-bottom:10px;">
-					<a href="${pageContext.request.contextPath}/jsp/order_info.jsp" id="clear" class="clear">清空购物车</a>
-					<a href="${pageContext.request.contextPath}/jsp/order_info.jsp">
+					<a href="${pageContext.request.contextPath}/cartServlet?method=clearCart" id="clear" class="clear">清空购物车</a>
+					<a href="${pageContext.request.contextPath}/orderServlet?method=saveOrder">
 						<%--提交表单 --%>
 						<input type="submit" width="100" value="提交订单" name="submit" border="0" style="background: url('${pageContext.request.contextPath}/img/register.gif') no-repeat scroll 0 0 rgba(0, 0, 0, 0);
 						height:35px;width:100px;color:white;">
 					</a>
 				</div>
 			</div>
+		</c:if>
 
 		</div>
 
@@ -113,5 +126,17 @@
 
 
 	</body>
+<script>
+	$(function(){
+	    //页面加载完毕,获取class为delete的值
+	    $(".delete").click(function () {
+			if (confirm("确认删除?")) {
+			    var pid= this.id
+				window.location.href = "/cartServlet?method=removeCartItem&id=" + pid
+			}
+        })
+	})
+
+</script>
 
 </html>

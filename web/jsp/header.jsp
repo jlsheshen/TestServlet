@@ -39,7 +39,7 @@
 						<li><a href="${pageContext.request.contextPath}/userServlet?method=userLogout">退出</a></li>
 						</c:if>
 						<li><a href="${pageContext.request.contextPath}/jsp/cart.jsp">购物车</a></li>
-						<li><a href="${pageContext.request.contextPath}/jsp/order_list.jsp">我的订单</a></li>
+						<li><a href="${pageContext.request.contextPath}/orderServlet?method=findMyOrdersWithPage&num=1">我的订单</a></li>
 					</ol>
 				</div>
 			</div>
@@ -64,12 +64,12 @@
 
 						<!-- Collect the nav links, forms, and other content for toggling -->
 						<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-							<ul class="nav navbar-nav">
-								<li class="active"><a href="${pageContext.request.contextPath}/jsp/product_list.jsp">手机数码<span class="sr-only">(current)</span></a></li>
-								<c:forEach items="${allCats}" var="c">
-									<li><a href="#">${c.cname}</a></li>
+							<ul class="nav navbar-nav" id="myURL">
+								<%--<li class="active"><a href="${pageContext.request.contextPath}/jsp/product_list.jsp">手机数码<span class="sr-only">(current)</span></a></li>--%>
+								<%--<c:forEach items="${allCats}" var="c">--%>
+									<%--<li><a href="#">${c.cname}</a></li>--%>
 
-								</c:forEach>
+								<%--</c:forEach>--%>
 							</ul>
 							<form class="navbar-form navbar-right" role="search">
 								<div class="form-group">
@@ -88,5 +88,28 @@
 
 		</div>
 	</body>
+
+<script>
+    $(function () {
+        //如果用户频繁的访问, 那总访问db效率太低
+        //像服务端CategoryServlet _getAllCategory 发起请求,服务端经过处理将所有分类信息返回json,获取所有分类并绑定
+            var url = "/categoryServlet"
+            var object = {"method":"getAllCats"}
+            $.post(url,object,function (data){
+                // alert(data)
+				//获取服务端相应回的数据,data存放的是数组
+				//遍历数组 动态显示分类区
+				$.each(data,function (i, obj) {
+                    var li = "<li><a href='/productServlet?method=findProductsByCidWithPage&num=1&cid=" + obj.cid + "'>" + obj.cname + " </a></li>"
+					$("#myURL").append(li)
+                }
+                )
+            },"json")
+        }
+        
+    )
+
+
+</script>
 
 </html>
